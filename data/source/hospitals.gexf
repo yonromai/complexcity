@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?><gexf version="1.1" xmlns="http://www.gexf.net/1.1draft" xmlns:viz="http://www.gexf.net/1.1draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance">
+  <graph defaultedgetype="undirected" mode="static">
+    <attributes class="node" mode="static">
+      <attribute id="0" title="latitude" type="double" />
+      <attribute id="1" title="longitude" type="double" />
+    </attributes>
+    <nodes>
+      <node id="3520" label="3520">
+        <attvalues>
+          <attvalue for="0" value="31.203477" />
+          <attvalue for="1" value="121.517063" />
+        </attvalues>
+      </node>
+      <node id="2306" label="2306">
+        <attvalues>
+          <attvalue for="0" value="31.256033" />
+          <attvalue for="1" value="121.504635" />
+        </attvalues>
+      </node>
+      <node id="2027" label="2027">
+        <attvalues>
+          <attvalue for="0" value="31.269448" />
+          <attvalue for="1" value="121.458136" />
+        </attvalues>
+      </node>
+      <node id="2180" label="2180">
+        <attvalues>
+          <attvalue for="0" value="31.261673" />
+          <attvalue for="1" value="121.505016" />
+        </attvalues>
+      </node>
+      <node id="2070" label="2070">
+        <attvalues>
+          <attvalue for="0" value="31.316792" />
+          <attvalue for="1" value="121.465795" />
+        </attvalues>
+      </node>
+      <node id="3009" label="3009">
+        <attvalues>
+          <attvalue for="0" value="31.414049" />
+          <attvalue for="1" value="121.482917" />
+        </attvalues>
+      </node>
+      <node id="8" label="8">
+        <attvalues>
+          <attvalue for="0" value="31.239658" />
+          <attvalue for="1" value="121.49592" />
+        </attvalues>
+      </node>
+      <node id="777" label="777">
+        <attvalues>
+          <attvalue for="0" value="31.185378" />
+          <attvalue for="1" value="121.462021" />
+        </attvalues>
+      </node>
+      <node id="2954" label="2954">
+        <attvalues>
+          <attvalue for="0" value="31.338392" />
+          <attvalue for="1" value="121.449404" />
+        </attvalues>
+      </node>
+      <node id="3469" label="3469">
+        <attvalues>
+          <attvalue for="0" value="31.243816" />
+          <attvalue for="1" value="121.533411" />
+        </attvalues>
+      </node>
+      <node id="2797" label="2797">
+        <attvalues>
+          <attvalue for="0" value="31.012103" />
+          <attvalue for="1" value="121.414993" />
+        </attvalues>
+      </node>
+      <node id="2448" label="2448">
+        <attvalues>
+          <attvalue for="0" value="31.304413" />
+          <attvalue for="1" value="121.523258" />
+        </attvalues>
+      </node>
+      <node id="3431" label="3431">
+        <attvalues>
+          <attvalue for="0" value="31.180435" />
+          <attvalue for="1" value="121.500759" />
+        </attvalues>
+      </node>
+      <node id="150" label="150">
+        <attvalues>
+          <attvalue for="0" value="31.208664" />
+          <attvalue for="1" value="121.492054" />
+        </attvalues>
+      </node>
+      <node id="1305" label="1305">
+        <attvalues>
+          <attvalue for="0" value="31.214501" />
+          <attvalue for="1" value="121.368556" />
+        </attvalues>
+      </node>
+      <node id="2203" label="2203">
+        <attvalues>
+          <attvalue for="0" value="31.286646" />
+          <attvalue for="1" value="121.485275" />
+        </attvalues>
+      </node>
+      <node id="158" label="158">
+        <attvalues>
+          <attvalue for="0" value="31.216521" />
+          <attvalue for="1" value="121.510999" />
+        </attvalues>
+      </node>
+      <node id="2309" label="2309">
+        <attvalues>
+          <attvalue for="0" value="31.291147" />
+          <attvalue for="1" value="121.491602" />
+        </attvalues>
+      </node>
+      <node id="2720" label="2720">
+        <attvalues>
+          <attvalue for="0" value="31.183954" />
+          <attvalue for="1" value="121.360492" />
+        </attvalues>
+      </node>
+      <node id="419" label="419">
+        <attvalues>
+          <attvalue for="0" value="31.21782" />
+          <attvalue for="1" value="121.472463" />
+        </attvalues>
+      </node>
+      <node id="2886" label="2886">
+        <attvalues>
+          <attvalue for="0" value="31.187962" />
+          <attvalue for="1" value="121.378873" />
+        </attvalues>
+      </node>
+      <node id="2347" label="2347">
+        <attvalues>
+          <attvalue for="0" value="31.261991" />
+          <attvalue for="1" value="121.520342" />
+        </attvalues>
+      </node>
+      <node id="1324" label="1324">
+        <attvalues>
+          <attvalue for="0" value="31.22697" />
+          <attvalue for="1" value="121.441014" />
+        </attvalues>
+      </node>
+      <node id="743" label="743">
+        <attvalues>
+          <attvalue for="0" value="31.154462" />
+          <attvalue for="1" value="121.420941" />
+        </attvalues>
+      </node>
+      <node id="2376" label="2376">
+        <attvalues>
+          <attvalue for="0" value="31.294862" />
+          <attvalue for="1" value="121.494828" />
+        </attvalues>
+      </node>
+      <node id="3763" label="3763">
+        <attvalues>
+          <attvalue for="0" value="31.249701" />
+          <attvalue for="1" value="121.561808" />
+        </attvalues>
+      </node>
+      <node id="3230" label="3230">
+        <attvalues>
+          <attvalue for="0" value="31.20093" />
+          <attvalue for="1" value="121.702051" />
+        </attvalues>
+      </node>
+      <node id="2742" label="2742">
+        <attvalues>
+          <attvalue for="0" value="31.063804" />
+          <attvalue for="1" value="121.41209" />
+        </attvalues>
+      </node>
+      <node id="1080" label="1080">
+        <attvalues>
+          <attvalue for="0" value="31.213678" />
+          <attvalue for="1" value="121.382951" />
+        </attvalues>
+      </node>
+      <node id="1340" label="1340">
+        <attvalues>
+          <attvalue for="0" value="31.214179" />
+          <attvalue for="1" value="121.401604" />
+        </attvalues>
+      </node>
+      <node id="1853" label="1853">
+        <attvalues>
+          <attvalue for="0" value="31.266103" />
+          <attvalue for="1" value="121.391794" />
+        </attvalues>
+      </node>
+      <node id="2494" label="2494">
+        <attvalues>
+          <attvalue for="0" value="31.327594" />
+          <attvalue for="1" value="121.543882" />
+        </attvalues>
+      </node>
+      <node id="2752" label="2752">
+        <attvalues>
+          <attvalue for="0" value="31.114193" />
+          <attvalue for="1" value="121.382491" />
+        </attvalues>
+      </node>
+      <node id="2113" label="2113">
+        <attvalues>
+          <attvalue for="0" value="31.322822" />
+          <attvalue for="1" value="121.46316" />
+        </attvalues>
+      </node>
+      <node id="3522" label="3522">
+        <attvalues>
+          <attvalue for="0" value="31.283187" />
+          <attvalue for="1" value="121.604973" />
+        </attvalues>
+      </node>
+      <node id="966" label="966">
+        <attvalues>
+          <attvalue for="0" value="31.223016" />
+          <attvalue for="1" value="121.465105" />
+        </attvalues>
+      </node>
+      <node id="3949" label="3949">
+        <attvalues>
+          <attvalue for="0" value="31.232154" />
+          <attvalue for="1" value="121.483182" />
+        </attvalues>
+      </node>
+      <node id="200" label="200">
+        <attvalues>
+          <attvalue for="0" value="31.238872" />
+          <attvalue for="1" value="121.484705" />
+        </attvalues>
+      </node>
+      <node id="2378" label="2378">
+        <attvalues>
+          <attvalue for="0" value="31.281928" />
+          <attvalue for="1" value="121.500503" />
+        </attvalues>
+      </node>
+      <node id="2891" label="2891">
+        <attvalues>
+          <attvalue for="0" value="31.168947" />
+          <attvalue for="1" value="121.354088" />
+        </attvalues>
+      </node>
+      <node id="462" label="462">
+        <attvalues>
+          <attvalue for="0" value="31.219376" />
+          <attvalue for="1" value="121.486171" />
+        </attvalues>
+      </node>
+      <node id="2896" label="2896">
+        <attvalues>
+          <attvalue for="0" value="31.035012" />
+          <attvalue for="1" value="121.42395" />
+        </attvalues>
+      </node>
+      <node id="3283" label="3283">
+        <attvalues>
+          <attvalue for="0" value="31.276412" />
+          <attvalue for="1" value="121.587245" />
+        </attvalues>
+      </node>
+      <node id="599" label="599">
+        <attvalues>
+          <attvalue for="0" value="31.139201" />
+          <attvalue for="1" value="121.441556" />
+        </attvalues>
+      </node>
+      <node id="3471" label="3471">
+        <attvalues>
+          <attvalue for="0" value="31.20087" />
+          <attvalue for="1" value="121.520183" />
+        </attvalues>
+      </node>
+      <node id="2397" label="2397">
+        <attvalues>
+          <attvalue for="0" value="31.317194" />
+          <attvalue for="1" value="121.496136" />
+        </attvalues>
+      </node>
+      <node id="1886" label="1886">
+        <attvalues>
+          <attvalue for="0" value="31.254228" />
+          <attvalue for="1" value="121.414297" />
+        </attvalues>
+      </node>
+      <node id="481" label="481">
+        <attvalues>
+          <attvalue for="0" value="31.221276" />
+          <attvalue for="1" value="121.47336" />
+        </attvalues>
+      </node>
+      <node id="227" label="227">
+        <attvalues>
+          <attvalue for="0" value="31.229665" />
+          <attvalue for="1" value="121.503644" />
+        </attvalues>
+      </node>
+      <node id="3813" label="3813">
+        <attvalues>
+          <attvalue for="0" value="31.146311" />
+          <attvalue for="1" value="121.574346" />
+        </attvalues>
+      </node>
+      <node id="871" label="871">
+        <attvalues>
+          <attvalue for="0" value="31.220837" />
+          <attvalue for="1" value="121.460098" />
+        </attvalues>
+      </node>
+      <node id="3304" label="3304">
+        <attvalues>
+          <attvalue for="0" value="31.245315" />
+          <attvalue for="1" value="121.601661" />
+        </attvalues>
+      </node>
+      <node id="3945" label="3945">
+        <attvalues>
+          <attvalue for="0" value="31.225466" />
+          <attvalue for="1" value="121.448302" />
+        </attvalues>
+      </node>
+      <node id="1002" label="1002">
+        <attvalues>
+          <attvalue for="0" value="31.216249" />
+          <attvalue for="1" value="121.467131" />
+        </attvalues>
+      </node>
+      <node id="103" label="103">
+        <attvalues>
+          <attvalue for="0" value="31.241951" />
+          <attvalue for="1" value="121.484294" />
+        </attvalues>
+      </node>
+      <node id="3564" label="3564">
+        <attvalues>
+          <attvalue for="0" value="31.005746" />
+          <attvalue for="1" value="121.697755" />
+        </attvalues>
+      </node>
+      <node id="1773" label="1773">
+        <attvalues>
+          <attvalue for="0" value="31.252571" />
+          <attvalue for="1" value="121.404676" />
+        </attvalues>
+      </node>
+      <node id="2031" label="2031">
+        <attvalues>
+          <attvalue for="0" value="31.251869" />
+          <attvalue for="1" value="121.481211" />
+        </attvalues>
+      </node>
+      <node id="2162" label="2162">
+        <attvalues>
+          <attvalue for="0" value="31.259739" />
+          <attvalue for="1" value="121.46794" />
+        </attvalues>
+      </node>
+      <node id="2675" label="2675">
+        <attvalues>
+          <attvalue for="0" value="31.113848" />
+          <attvalue for="1" value="121.386456" />
+        </attvalues>
+      </node>
+      <node id="2295" label="2295">
+        <attvalues>
+          <attvalue for="0" value="31.284729" />
+          <attvalue for="1" value="121.497541" />
+        </attvalues>
+      </node>
+      <node id="1529" label="1529">
+        <attvalues>
+          <attvalue for="0" value="31.238423" />
+          <attvalue for="1" value="121.449375" />
+        </attvalues>
+      </node>
+      <node id="2554" label="2554">
+        <attvalues>
+          <attvalue for="0" value="31.277469" />
+          <attvalue for="1" value="121.557" />
+        </attvalues>
+      </node>
+      <node id="2555" label="2555">
+        <attvalues>
+          <attvalue for="0" value="31.263598" />
+          <attvalue for="1" value="121.545111" />
+        </attvalues>
+      </node>
+      <node id="1770" label="1770">
+        <attvalues>
+          <attvalue for="0" value="31.237696" />
+          <attvalue for="1" value="121.403703" />
+        </attvalues>
+      </node>
+      <node id="4222" label="4222">
+        <attvalues>
+          <attvalue for="0" value="31.314161" />
+          <attvalue for="1" value="121.533779" />
+        </attvalues>
+      </node>
+    </nodes>
+    <edges />
+  </graph>
+</gexf>
