@@ -1,0 +1,11 @@
+require([
+    "/js/lib/bootstrap-transition.js",
+    "/js/lib/bootstrap-modal.js",
+    "/js/lib/bootstrap-dropdown.js",
+    "/js/lib/bootstrap-alert.js",
+    "/js/lib/modestmaps.js",
+    "/js/complexcity.js",
+    "/js/nodes.js",
+    "/js/spotlight.js",
+    "/js/modestmaps.markers.js"
+	]);
