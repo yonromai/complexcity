@@ -240,4 +240,6 @@ if (!com.modestmaps) {
         }
     }
 
+    console.log('Markers Loaded');
+
 })(com.modestmaps);

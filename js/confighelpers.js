@@ -1,5 +1,5 @@
 var Plot = function(){
-  this.graph = '/data/shanghaiNetwork-500.json';
+  this.graph = '/data/shanghaiNetwork-150.json';
   this.allowedMeans = {
     road: true,
     bus: true,
