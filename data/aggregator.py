@@ -40,7 +40,7 @@ subwayPath = 'source/subway.gexf'
 hospitalsPath = 'source/Hospitals.gexf'
 
 #-----------------------------------
-# (Pre)Processing the different graphs
+# (Pre)Processing the different graphscle
 #-----------------------------------
 def process_roads(roadPath):
 	print 'Processing Roads...'
@@ -271,7 +271,7 @@ def extract_reduced_graph(G, centroids, idx, zone):
 	return MG
 
 def write_json(G, i):
-	data = json_graph.node_link_data(G)
+	data = json_graph.adjacency_data(G)
 	s = json.dumps(data)
 	f = open(outFileName.format('-{0}'.format(i),"json"), 'w')
 	f.write(s)
