@@ -4,8 +4,9 @@ require([
     "/js/lib/bootstrap-dropdown.js",
     "/js/lib/bootstrap-alert.js",
     "/js/lib/modestmaps.js",
-    "/js/complexcity.js",
-    "/js/nodes.js",
-    "/js/spotlight.js",
-    "/js/modestmaps.markers.js"
+    "order!/js/confighelpers.js",
+    "order!/js/nodes.js",
+    "order!/js/spotlight.js",
+    "order!/js/modestmaps.markers.js",
+    "order!/js/complexcity.js"
 	]);
