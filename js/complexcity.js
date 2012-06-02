@@ -3,10 +3,10 @@
 
 define([
 	"/js/lib/modestmaps.js",
+    "/js/modestmaps.markers.js",
     "js/confighelpers.js",
     "/js/nodes.js",
-    "/js/spotlight.js",
-    "/js/modestmaps.markers.js"
+    "/js/spotlight.js"
 	], function() {
 
 var 
@@ -117,7 +117,17 @@ function plotMap(graph) {
                 selectedNodes = new NodeLayer(false);
                 map.addLayer(selectedNodes);
 
-                markers = new MM.MarkerLayer();
+                var markers;
+                try {  
+                   markers = new MM.MarkerLayer();
+                } catch (e) {
+                    if (e instanceof TypeError){
+                       setTimeout(function(){plotMap(graph)}, 500); // FIXME: bad bad bad... set retry policy
+                       return;
+                   }
+                   throw e;
+                }
+                
                 map.addLayer(markers);
 
                 nodes = graph.nodes
