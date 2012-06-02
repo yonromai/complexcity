@@ -2,8 +2,8 @@
 // NOTE: time unit is second and distance unit is meter
 
 define([
-	"/js/lib/modestmaps.js",
-    "/js/modestmaps.markers.js",
+	"order!/js/lib/modestmaps.js",
+    "order!/js/modestmaps.markers.js",
     "js/confighelpers.js",
     "/js/nodes.js",
     "/js/spotlight.js"
@@ -118,15 +118,7 @@ function plotMap(graph) {
                 map.addLayer(selectedNodes);
 
                 var markers;
-                try {  
-                   markers = new MM.MarkerLayer();
-                } catch (e) {
-                    if (e instanceof TypeError){
-                       setTimeout(function(){plotMap(graph)}, 500); // FIXME: bad bad bad... set retry policy
-                       return;
-                   }
-                   throw e;
-                }
+                markers = new MM.MarkerLayer();
                 
                 map.addLayer(markers);
 
