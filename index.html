@@ -137,7 +137,7 @@
 
     
 
-    <div class="container mapmode">
+    <div id='container'class="container">
 
   
 
@@ -149,37 +149,17 @@
     </div>
 
 
-      <div class="hero-unit hide">
+      <div id='graph_loading' class="hero-unit hide">
           <h2>Rendering Map</h2>
           <p>Please wait while the map is being rendered.</p>
-          <div class="span8">
-            <table class="table table-condensed">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Step</th>
-                  <th>Sate</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <hr>
+          <!-- TODO: Add tooltips to the loadings -->
+
+          <p>Downloading Graph... <img id='dowloadImg'/></p>
+          <p>Prepocessing Graph... <img id='preprocessingImg'/></P>
+          <p>Processing Graph... <img id='processingImg'/></p>
+          <p>Rendering Map... <img id='renderingImg'/></p>
+
       </div>
 
     </div>

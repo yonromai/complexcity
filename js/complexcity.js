@@ -8,92 +8,85 @@ define([
     "/js/spotlight.js",
     "/js/modestmaps.markers.js"
 	], function() {
-    
 
-function runPlot(plot, conf){
+var 
+  worker = new Worker('/js/worker.js'),
+  plot = new Plot(),
+  conf = new Conf();
+
+
+function showMap(){
+    $('#container').addClass('mapmode');
+    $("#map").removeClass("hide");
+    $("#graph_loading").addClass("hide");
+    map.setCenterZoom(conf.defaultStartLocation, conf.defaultStartZoom);
+}
+
+function hideMap(){
+    $("#map").addClass("hide");
+    $('#container').removeClass('mapmode');
+    $("#graph_loading").removeClass("hide");
+}
+
+function runPlot(){
 	//Run graph calculus
+    hideMap();
+
+    $('#dowloadImg').attr('src',"/img/load.gif");
+
 	$.getJSON(plot.graph, function(data) {
-	  	computeGraph(data, plot, conf);
+	  	onGraphDownloaded(data);
 	});
 }
 
-function computeGraph(graph, plot, conf) {
+worker.onmessage = function(e){
+    //console.log('Main: Received message: ' + e.data.message);
+    if(e.data.message === 'console'){
+        console.log(e.data.data);
+    }
+    if(e.data.message === 'preprocessed'){
+        graph = e.data.data[0];
+        hospitals = e.data.data[1];
+        onPreprocessed(graph,hospitals);
+    }
+    if(e.data.message === 'processed'){
+        graph = e.data.data;
+        onProcessed(graph);
+    }
+}
+
+function onGraphDownloaded(graph) {
 	// TODO: set downloaded graph + graph precalculus
-	var hospitals = getHospitals(graph);
-	var graph = processEdges(graph, plot, conf);
-	var graph = calcReachness(graph, hospitals);
-	plotMap(graph, conf);
+    $('#dowloadImg').attr('src',"/img/icon-done.png");
+    $('#preprocessingImg').attr('src',"/img/load.gif");
+
+    worker.postMessage({
+        message: 'preprocess',
+        data: [graph, plot, conf.speed]
+    })
 }
 
-// return hospitals' index
-function getHospitals(graph){
-	var hospitals = {};
-	for (i in graph.nodes) {
-		var node = graph.nodes[i];
-		if (node.type === "hospital"){
-			//console.log(node.latitude + ';' + node.longitude)
-			hospitals[i] = node;
-		}
-	}
-	return hospitals;
+function onPreprocessed(graph, hospitals){
+    $('#preprocessingImg').attr('src',"/img/icon-done.png");
+    $('#processingImg').attr('src',"/img/load.gif");
+
+    worker.postMessage({
+        message: 'process',
+        data: [graph, hospitals]
+    })
 }
 
-function processEdges(graph, plot, conf){
-	for (i in graph.adjacency){
-		for(j in graph.adjacency[i]){
-			for(k in graph.adjacency[i][j]){
-				if (k != 'id') {
-					edge = graph.adjacency[i][j][k]; // Edge between the nodes i and j, using the k-th transport mean
-					if(plot.allowedMeans[edge.type]){
-						if(edge.type === 'road')
-							if(plot.allowedMeans['taxi']){
-								edge.type = 'car';
-							} else {
-								edge.type = 'walk';
-							}
-						edge.timeCost = edge.weight * conf.speed[edge.type];
-					} else {
-						delete graph.adjacency[i][j][k];
-					}
-				}
-			}
-		}
-	}
-	return graph;
+function onProcessed(graph){
+     $('#processingImg').attr('src',"/img/icon-done.png");
+    $('#renderingImg').attr('src',"/img/load.gif");
+
+    setTimeout(function(){plotMap(graph)}, 100);
 }
 
-function eliminateDuplicates(arr) { // To suppr!
-  var i,
-      len=arr.length,
-      out=[],
-      obj={};
-  for (i=0;i<len;i++) {
-    obj[arr[i]]=0;
-  }
-  for (i in obj) {
-    out.push(i);
-  }
-  return out;
+function onMapRendered(){
+    $('#renderingImg').attr('src',"/img/icon-done.png");
+    setTimeout(function(){showMap()}, 500);
 }
-
-function calcReachness(graph, hospitals){
-	//effective dijkstra implementation... todo xD
-	for (i in graph.nodes) {
-		var node = graph.nodes[i];
-		var servedBy = [];
-        hospKey = [];
-        for (var k in hospitals)hospKey.push(k);
-		var nbHosp = Math.floor((Math.random()*hospKey.length));
-		for (i = 0; i < nbHosp; i++){
-			var k = Math.floor((Math.random()*hospKey.length));
-			servedBy.push(hospKey[k]);
-		}
-		node.servedBy = eliminateDuplicates(servedBy);
-		node.radius = Math.floor((Math.random()*20000));
-	}
-	return graph;
-}
-
 
 //FIXME: remove from global scope!
 var map,
@@ -103,12 +96,12 @@ var map,
     selectedNodes,
     nodesServedBy = {};
 
-function plotMap(graph, conf) {
+function plotMap(graph) {
 
 	var locations = [];
     //Specify template provider
     map = new MM.Map("map", conf.mapProvider);
-    map.setCenterZoom(conf.defaultStartLocation, conf.defaultStartZoom);
+    //map.setCenterZoom(conf.defaultStartLocation, conf.defaultStartZoom);
 
 
     map.meter2pixel = function(meters){
@@ -165,12 +158,11 @@ function plotMap(graph, conf) {
             } else {
                 nodesServedBy[hospital] = [i];
             }
-
-        
 	}
 
 	// tell the map to fit all of the locations in the available space
     map.setExtent(locations);
+    onMapRendered();
   }
 
 
@@ -212,6 +204,7 @@ function onMarkerOut(e) {
     selectedNodes.parent.className = "inactive";
 }
 
-runPlot(new Plot, new Conf); //Load new map with default settings
+runPlot(); //Load new map with default settings
 
 });
+

@@ -1,4 +1,5 @@
-var Plot = function(){
+
+  var Plot = function(){
   this.graph = '/data/shanghaiNetwork-150.json';
   this.allowedMeans = {
     road: true,
@@ -20,8 +21,13 @@ var Conf = function(){
   };
   this.mapProvider = new MM.TemplatedLayer("http://ecn.t{S}.tiles.virtualearth.net/tiles/r{Q}?g=689&mkt=en-us&lbl=l0&stl=m", [0,1,2,3,4,5,6,7]);
   this.defaultStartLocation = new MM.Location(31.217499, 121.478577);
-  this.defaultStartZoom = 10;
+  this.defaultStartZoom = 9;
 };
 //TODO: implement unit conv prototypes
+
+
+
+
+
 
 
