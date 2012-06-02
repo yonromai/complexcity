@@ -118,7 +118,7 @@ function plotMap(graph) {
                 map.addLayer(selectedNodes);
 
                 var markers;
-                markers = new MM.MarkerLayer();
+                markers = new MarkerLayer();
                 
                 map.addLayer(markers);
 
