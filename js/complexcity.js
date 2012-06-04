@@ -147,37 +147,37 @@ function plotMap() {
     console.log((100 * (nodes.length -  notServed) / nodes.length).toFixed(2) + " % node served.");
 
     // Adding hospitals
-    // for(h in hospitals){
-    //     node = nodes[h];
-    //     var marker = document.createElement("div");
-    //     marker.setAttribute("class", "hospital");
-    //     marker.id = h;
+    for(h in hospitals){
+        node = nodes[h];
+        var marker = document.createElement("div");
+        marker.setAttribute("class", "hospital");
+        marker.id = h;
 
-    //     markers.addMarker(marker, new MM.Location(node.latitude,node.longitude));
+        markers.addMarker(marker, new MM.Location(node.latitude,node.longitude));
 
-    //     locations.push(marker.location);
-    //     var img = marker.appendChild(document.createElement("img"));
-    //     var path = "/img/Red-Cross.png";
-    //     img.setAttribute("src", path);        
+        locations.push(marker.location);
+        var img = marker.appendChild(document.createElement("img"));
+        var path = "/img/Red-Cross.png";
+        img.setAttribute("src", path);        
 
-    //     MM.addEvent(marker, "mouseover", onMarkerOver);
-    //     MM.addEvent(marker, "mouseout", onMarkerOut);
-    // }
+        MM.addEvent(marker, "mouseover", onMarkerOver);
+        MM.addEvent(marker, "mouseout", onMarkerOut);
+    }
 
     //preprocessing hostpitals areas
-    hospitalAreas = {}
-    for(h in hospitals){
-        hospitalAreas[h] = new NodeLayer(false);
-        hospitalAreas[h].parent.className = "inactive";
-        map.addLayer(hospitalAreas[h]);
-        for (v in hospitals[h]){
-                node = nodes[v];
-                var radius = conf.speed.walk * hospitals[h][v]; 
-                node.radius = radius;
-                hospitalAreas[h].addNode(node);
-            }
-    }
-    currentSelection = allNodes;
+    // hospitalAreas = {}
+    // for(h in hospitals){
+    //     hospitalAreas[h] = new NodeLayer(false);
+    //     hospitalAreas[h].parent.className = "inactive";
+    //     map.addLayer(hospitalAreas[h]);
+    //     for (v in hospitals[h]){
+    //             node = nodes[v];
+    //             var radius = conf.speed.walk * hospitals[h][v]; 
+    //             node.radius = radius;
+    //             hospitalAreas[h].addNode(node);
+    //         }
+    // }
+    // currentSelection = allNodes;
 
 	// tell the map to fit all of the locations in the available space
     map.setExtent(locations);
@@ -194,24 +194,24 @@ function getMarker(target) {
 
 
 
-function onMarkerOver(e) {
-    var marker = getMarker(e.target);
-    if (marker) {
-        node = nodes[marker.id];
-        if(node.type === 'hospital'){
-            console.log("Over hospital " + marker.id);
-            currentSelection.parent.className = "inactive";
-            currentSelection = hospitalAreas[marker.id];
-            currentSelection.parent.className = "active";
-        }
-    }  
-}
+// function onMarkerOver(e) {
+//     var marker = getMarker(e.target);
+//     if (marker) {
+//         node = nodes[marker.id];
+//         if(node.type === 'hospital'){
+//             console.log("Over hospital " + marker.id);
+//             currentSelection.parent.className = "inactive";
+//             currentSelection = hospitalAreas[marker.id];
+//             currentSelection.parent.className = "active";
+//         }
+//     }  
+// }
 
-function onMarkerOut(e) {
-    currentSelection.parent.className = "inactive";
-    currentSelection = allNodes;
-    currentSelection.parent.className = "active";
-}
+// function onMarkerOut(e) {
+//     currentSelection.parent.className = "inactive";
+//     currentSelection = allNodes;
+//     currentSelection.parent.className = "active";
+// }
 
 
 
