@@ -111,7 +111,7 @@ var jsonGraphMapper = (function(){
 // Plot contains the plot request of the user
 // NOTE: time unit is second and distance unit is meter
 var Plot = function(){
-  this.graph = jsonGraphMapper['1000'];
+  this.graph = jsonGraphMapper['500'];
   this.allowedMeans = {
     road: true,
     bus: true,
