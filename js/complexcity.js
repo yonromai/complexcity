@@ -87,8 +87,8 @@ function onMapRendered(){
 var 
 allNodes,
 currentSelection,
-//nodeSelection1,//there are 2 selections in case we go directly from one hospital to another (to ensure transition stat)
-//nodeSelection2,
+nodeSelection1,//there are 2 selections in case we go directly from one hospital to another (to ensure transition stat)
+nodeSelection2,
 //hospitalAreas;
 map,
 markers;
@@ -103,7 +103,6 @@ function plotMap() {
 	var locations = [];
     //Specify template provider
     showMap();
-    delete(map);
     map = new MM.Map("map", conf.mapProvider);
     map.setCenterZoom(new MM.Location(conf.startLatitude,conf.startLongitude), conf.startZoom);
 
@@ -117,11 +116,11 @@ function plotMap() {
     allNodes = new NodeLayer(false);
     map.addLayer(allNodes);
 
-    // nodeSelection1 = new NodeLayer(false);
-    // map.addLayer(nodeSelection1);
+    nodeSelection1 = new NodeLayer(false);
+    map.addLayer(nodeSelection1);
 
-    // nodeSelection2 = new NodeLayer(false);
-    // map.addLayer(nodeSelection2);
+    nodeSelection2 = new NodeLayer(false);
+    map.addLayer(nodeSelection2);
 
     markers = new MarkerLayer();
     map.addLayer(markers);
@@ -148,37 +147,37 @@ function plotMap() {
     console.log((100 * (nodes.length -  notServed) / nodes.length).toFixed(2) + " % node served.");
 
     // Adding hospitals
-    for(h in hospitals){
-        node = nodes[h];
-        var marker = document.createElement("div");
-        marker.setAttribute("class", "hospital");
-        marker.id = h;
+    // for(h in hospitals){
+    //     node = nodes[h];
+    //     var marker = document.createElement("div");
+    //     marker.setAttribute("class", "hospital");
+    //     marker.id = h;
 
-        markers.addMarker(marker, new MM.Location(node.latitude,node.longitude));
+    //     markers.addMarker(marker, new MM.Location(node.latitude,node.longitude));
 
-        locations.push(marker.location);
-        var img = marker.appendChild(document.createElement("img"));
-        var path = "/img/Red-Cross.png";
-        img.setAttribute("src", path);        
+    //     locations.push(marker.location);
+    //     var img = marker.appendChild(document.createElement("img"));
+    //     var path = "/img/Red-Cross.png";
+    //     img.setAttribute("src", path);        
 
-        MM.addEvent(marker, "mouseover", onMarkerOver);
-        MM.addEvent(marker, "mouseout", onMarkerOut);
-    }
+    //     MM.addEvent(marker, "mouseover", onMarkerOver);
+    //     MM.addEvent(marker, "mouseout", onMarkerOut);
+    // }
 
     //preprocessing hostpitals areas
-    // hospitalAreas = {}
-    // for(h in hospitals){
-    //     hospitalAreas[h] = new NodeLayer(false);
-    //     hospitalAreas[h].parent.className = "inactive";
-    //     map.addLayer(hospitalAreas[h]);
-    //     for (v in hospitals[h]){
-    //             node = nodes[v];
-    //             var radius = conf.speed.walk * hospitals[h][v]; 
-    //             node.radius = radius;
-    //             hospitalAreas[h].addNode(node);
-    //         }
-    // }
-    // currentSelection = allNodes;
+    hospitalAreas = {}
+    for(h in hospitals){
+        hospitalAreas[h] = new NodeLayer(false);
+        hospitalAreas[h].parent.className = "inactive";
+        map.addLayer(hospitalAreas[h]);
+        for (v in hospitals[h]){
+                node = nodes[v];
+                var radius = conf.speed.walk * hospitals[h][v]; 
+                node.radius = radius;
+                hospitalAreas[h].addNode(node);
+            }
+    }
+    currentSelection = allNodes;
 
 	// tell the map to fit all of the locations in the available space
     map.setExtent(locations);
@@ -191,6 +190,38 @@ function getMarker(target) {
         marker = marker.parentNode;
     }
     return marker;
+}
+
+
+
+function onMarkerOver(e) {
+    var marker = getMarker(e.target);
+    if (marker) {
+        node = nodes[marker.id];
+        if(node.type === 'hospital'){
+            console.log("Over hospital " + marker.id);
+            currentSelection.parent.className = "inactive";
+            currentSelection = hospitalAreas[marker.id];
+            currentSelection.parent.className = "active";
+        }
+    }  
+}
+
+function onMarkerOut(e) {
+    currentSelection.parent.className = "inactive";
+    currentSelection = allNodes;
+    currentSelection.parent.className = "active";
+}
+
+
+
+function onMarkerOut(e) {
+    nodeSelection1.parent.className = "inactive";
+    nodeSelection1.removeAllNodes();
+    nodeSelection2.parent.className = "inactive";
+    nodeSelection2.removeAllNodes();
+    allNodes.parent.className = "active";
+
 }
 
 function onMarkerOver(e) {
@@ -209,6 +240,9 @@ function onMarkerOver(e) {
                 nodeSelection1.removeAllNodes();
             }
 
+            allNodes.parent.className = "inactive";
+            selection.parent.className = "active";
+
             for (v in hospitals[marker.id]){
                 node = nodes[v];
                 var radius = conf.speed.walk * hospitals[marker.id][v]; 
@@ -216,45 +250,16 @@ function onMarkerOver(e) {
                 selection.addNode(node);
             }
         }
-        allNodes.parent.className = "inactive";
-        selection.parent.className = "active";
     }  
-}
-
-// function onMarkerOver(e) {
-//     var marker = getMarker(e.target);
-//     if (marker) {
-//         node = nodes[marker.id];
-//         if(node.type === 'hospital'){
-//             console.log("Over hospital " + marker.id);
-//             currentSelection.parent.className = "inactive";
-//             currentSelection = hospitalAreas[marker.id];
-//             currentSelection.parent.className = "active";
-//         }
-//     }  
-// }
-
-// function onMarkerOut(e) {
-//     currentSelection.parent.className = "inactive";
-//     currentSelection = allNodes;
-//     currentSelection.parent.className = "active";
-// }
-
-function onMarkerOut(e) {
-    nodeSelection1.parent.className = "inactive";
-    nodeSelection1.removeAllNodes();
-    nodeSelection2.parent.className = "inactive";
-    nodeSelection2.removeAllNodes();
-    allNodes.parent.className = "active";
-
 }
 
 
 //Glob var for the whole page :s
 function runDefaultPlot(){
     plot = new Plot();
-    conf = new Conf();
+    //conf = new Conf(); //FIXME: Does default plot mean default config?.. not sure
     runPlot();
 }
 
+conf = new Conf();
 runDefaultPlot(); //Load new map with default settings
