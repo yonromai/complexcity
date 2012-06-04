@@ -1,62 +1,54 @@
-// Plot contains the plot request of the user
-// NOTE: time unit is second and distance unit is meter
-
-define([
-	"order!/js/lib/modestmaps.js",
-    "order!/js/modestmaps.markers.js",
-    "js/confighelpers.js",
-    "/js/nodes.js",
-    "/js/spotlight.js"
-	], function() {
-
-var 
-  worker = new Worker('/js/worker.js'),
-  plot = new Plot(),
-  conf = new Conf();
 
 
-function showMap(){
-    $('#container').addClass('mapmode');
-    $("#map").removeClass("hide");
-    $("#graph_loading").addClass("hide");
-    map.setCenterZoom(conf.defaultStartLocation, conf.defaultStartZoom);
-}
+    var 
+    worker = new Worker('/js/worker.js');
+    
+    function showMap(){
+        $('#container').addClass('mapmode');
+        $("#map").removeClass("hide");
+        $("#graph_loading").addClass("hide");
+    }
 
-function hideMap(){
-    $("#map").addClass("hide");
-    $('#container').removeClass('mapmode');
-    $("#graph_loading").removeClass("hide");
-}
+    function hideMap(){
+        $("#map").addClass("hide");
+        $('#container').removeClass('mapmode');
+        $("#graph_loading").removeClass("hide");
+    }
 
-function runPlot(){
+    function runPlot(){
 	//Run graph calculus
+    $('#dowloadImg').removeAttr('src');
+    $('#preprocessingImg').removeAttr('src');
+    $('#processingImg').removeAttr('src');
+   $('#renderingImg').removeAttr('src');
     hideMap();
 
     $('#dowloadImg').attr('src',"/img/load.gif");
 
-	$.getJSON(plot.graph, function(data) {
-	  	onGraphDownloaded(data);
-	});
+    $.getJSON(plot.graph, function(data) {
+        onGraphDownloaded(data);
+    });
 }
 
 worker.onmessage = function(e){
-    //console.log('Main: Received message: ' + e.data.message);
     if(e.data.message === 'console'){
         console.log(e.data.data);
     }
     if(e.data.message === 'preprocessed'){
-        graph = e.data.data[0];
-        hospitals = e.data.data[1];
-        onPreprocessed(graph,hospitals);
+        var graph = e.data.data;        
+        onPreprocessed(graph);
     }
     if(e.data.message === 'processed'){
-        graph = e.data.data;
+        var graph = e.data.data[0];
+        servedBy = e.data.data[1];
+        hospitals = e.data.data[2];
+
+        nodes = graph.nodes;
         onProcessed(graph);
     }
 }
 
 function onGraphDownloaded(graph) {
-	// TODO: set downloaded graph + graph precalculus
     $('#dowloadImg').attr('src',"/img/icon-done.png");
     $('#preprocessingImg').attr('src',"/img/load.gif");
 
@@ -66,21 +58,21 @@ function onGraphDownloaded(graph) {
     })
 }
 
-function onPreprocessed(graph, hospitals){
+function onPreprocessed(graph){
     $('#preprocessingImg').attr('src',"/img/icon-done.png");
     $('#processingImg').attr('src',"/img/load.gif");
 
     worker.postMessage({
         message: 'process',
-        data: [graph, hospitals]
+        data: [graph, plot.timelimit]
     })
 }
 
-function onProcessed(graph){
-     $('#processingImg').attr('src',"/img/icon-done.png");
-    $('#renderingImg').attr('src',"/img/load.gif");
+function onProcessed(){
+   $('#processingImg').attr('src',"/img/icon-done.png");
+   $('#renderingImg').attr('src',"/img/load.gif");
 
-    setTimeout(function(){plotMap(graph)}, 100);
+   setTimeout(function(){plotMap()}, 100);
 }
 
 function onMapRendered(){
@@ -88,89 +80,111 @@ function onMapRendered(){
     setTimeout(function(){showMap()}, 500);
 }
 
-//FIXME: remove from global scope!
-var map,
-    markers,
-    nodes,
-    allNodes,
-    selectedNodes,
-    nodesServedBy = {};
 
-function plotMap(graph) {
+//FIXME: remove from global scope!
+var 
+allNodes,
+currentSelection,
+//nodeSelection1,//there are 2 selections in case we go directly from one hospital to another (to ensure transition stat)
+//nodeSelection2,
+//hospitalAreas;
+map,
+markers;
+
+// Holds data
+var nodes,
+servedBy,
+hospitals;
+
+function plotMap() {
 
 	var locations = [];
     //Specify template provider
+    showMap();
     map = new MM.Map("map", conf.mapProvider);
-    //map.setCenterZoom(conf.defaultStartLocation, conf.defaultStartZoom);
-
+    map.setCenterZoom(new MM.Location(conf.startLatitude,conf.startLongitude), conf.startZoom);
 
     map.meter2pixel = function(meters){
-                    var sf = new MM.Location(37.774944,-122.419359);
-                    var mv = new MM.Location(37.386023,-122.08386);
-                    var pixels = meters * ( MM.Point.distance( this.locationPoint(sf), this.locationPoint(mv)) / MM.Location.distance(sf,mv));
-                    return pixels;
-                };
+        var sf = new MM.Location(37.774944,-122.419359);
+        var mv = new MM.Location(37.386023,-122.08386);
+        var pixels = meters * ( MM.Point.distance( this.locationPoint(sf), this.locationPoint(mv)) / MM.Location.distance(sf,mv));
+        return pixels;
+    };
 
-                allNodes = new NodeLayer(false);
-                map.addLayer(allNodes);
+    allNodes = new NodeLayer(false);
+    map.addLayer(allNodes);
 
-                selectedNodes = new NodeLayer(false);
-                map.addLayer(selectedNodes);
+    nodeSelection1 = new NodeLayer(false);
+    map.addLayer(nodeSelection1);
 
-                var markers;
-                markers = new MarkerLayer();
-                
-                map.addLayer(markers);
+    nodeSelection2 = new NodeLayer(false);
+    map.addLayer(nodeSelection2);
 
-                nodes = graph.nodes
+    markers = new MarkerLayer();
+    map.addLayer(markers);
 
+    //Addind map areas (red circles)
+    notServed = 0;
     for (i in nodes) {
-    	var node = nodes[i];
-
-    	allNodes.addNode(node);
-
-         if (node.type === 'hospital'){
-
-            var marker = document.createElement("div");
-            // listen for mouseover & mouseout events
-            MM.addEvent(marker, "mouseover", onMarkerOver);
-            MM.addEvent(marker, "mouseout", onMarkerOut);
-
-            //marker.type = node.type;
-            marker.nodeId = i;
-            //marker.servedBy = node.servedBy;
-            marker.setAttribute("class", "node");
-            //marker.setAttribute("shape","circle"); 
-            //marker.setAttribute("coords","0,0,100");
-
-
-            markers.addMarker(marker, new MM.Location(node.latitude,node.longitude));
-
-            locations.push(marker.location);
-       
-            var img = marker.appendChild(document.createElement("img"));
-            img.setAttribute("src", "/img/cross.png");
-            //marker.setAttribute("style","z-index:100;")
-
+        var node = nodes[i];
+        var maxTime = 0;
+        for(hosp in servedBy[i]){
+            if(maxTime < servedBy[i][hosp])
+               maxTime = servedBy[i][hosp] ;
         }
+        if(maxTime > 0){
+            var speed =(plot.allowedMeans.taxi ? conf.speed.car : conf.speed.walk);
+            var radius = conf.speed.walk * maxTime; 
+            node.radius = radius;
+            allNodes.addNode(node);
+        } else {
+            notServed ++;
+        }
+    }
 
-        for (hospital in node.servedBy)
-            if (hospital in nodesServedBy) {
-                nodesServedBy[hospital].push(i);
-            } else {
-                nodesServedBy[hospital] = [i];
-            }
-	}
+    console.log((100 * (nodes.length -  notServed) / nodes.length).toFixed(2) + " % node served.");
+
+    // Adding hospitals
+    for(h in hospitals){
+        node = nodes[h];
+        var marker = document.createElement("div");
+        marker.setAttribute("class", "hospital");
+        marker.id = h;
+
+        markers.addMarker(marker, new MM.Location(node.latitude,node.longitude));
+
+        locations.push(marker.location);
+        var img = marker.appendChild(document.createElement("img"));
+        var path = "/img/Red-Cross.png";
+        img.setAttribute("src", path);        
+
+        MM.addEvent(marker, "mouseover", onMarkerOver);
+        MM.addEvent(marker, "mouseout", onMarkerOut);
+    }
+
+    //preprocessing hostpitals areas
+    // hospitalAreas = {}
+    // for(h in hospitals){
+    //     hospitalAreas[h] = new NodeLayer(false);
+    //     hospitalAreas[h].parent.className = "inactive";
+    //     map.addLayer(hospitalAreas[h]);
+    //     for (v in hospitals[h]){
+    //             node = nodes[v];
+    //             var radius = conf.speed.walk * hospitals[h][v]; 
+    //             node.radius = radius;
+    //             hospitalAreas[h].addNode(node);
+    //         }
+    // }
+    // currentSelection = allNodes;
 
 	// tell the map to fit all of the locations in the available space
     map.setExtent(locations);
     onMapRendered();
-  }
-
+}
 
 function getMarker(target) {
     var marker = target;
-    while (marker && marker.className != "node") {
+    while (marker && marker.className != "hospital") {
         marker = marker.parentNode;
     }
     return marker;
@@ -179,34 +193,65 @@ function getMarker(target) {
 function onMarkerOver(e) {
     var marker = getMarker(e.target);
     if (marker) {
-        node = nodes[marker.nodeId];
-        if(node.type === 'hospital' && marker.nodeId in nodesServedBy){
-            console.log("Over hospital " + marker.nodeId);
-            for (id in nodesServedBy[marker.nodeId])
-                selectedNodes.addNode(nodes[id]);
-        } else {
-            console.log("Over node " + marker.nodeId);
-            selectedNodes.addNode(node);
-            for(id in node.servedBy)
-                hospital = nodes[id];
-                if(hospital)
-                    selectedNodes.addNode(hospital);
+        node = nodes[marker.id];
+        if(node.type === 'hospital'){
+            console.log("Over hospital " + marker.id);
+
+            var selection;
+            if(nodeSelection1.isEmpty()){
+                selection = nodeSelection1;
+            } else {
+                nodeSelection1.parent.className = "inactive";
+                selection = nodeSelection2;
+                nodeSelection1.removeAllNodes();
+            }
+
+            for (v in hospitals[marker.id]){
+                node = nodes[v];
+                var radius = conf.speed.walk * hospitals[marker.id][v]; 
+                node.radius = radius;
+                selection.addNode(node);
+            }
         }
-        selectedNodes.parent.className = "active";
         allNodes.parent.className = "inactive";
-    } else {
-        allNodes.parent.className = "active";
-        selectedNodes.parent.className = "inactive";
-    }   
+        selection.parent.className = "active";
+    }  
 }
+
+// function onMarkerOver(e) {
+//     var marker = getMarker(e.target);
+//     if (marker) {
+//         node = nodes[marker.id];
+//         if(node.type === 'hospital'){
+//             console.log("Over hospital " + marker.id);
+//             currentSelection.parent.className = "inactive";
+//             currentSelection = hospitalAreas[marker.id];
+//             currentSelection.parent.className = "active";
+//         }
+//     }  
+// }
+
+// function onMarkerOut(e) {
+//     currentSelection.parent.className = "inactive";
+//     currentSelection = allNodes;
+//     currentSelection.parent.className = "active";
+// }
 
 function onMarkerOut(e) {
+    nodeSelection1.parent.className = "inactive";
+    nodeSelection1.removeAllNodes();
+    nodeSelection2.parent.className = "inactive";
+    nodeSelection2.removeAllNodes();
     allNodes.parent.className = "active";
-    selectedNodes.removeAllNodes();
-    selectedNodes.parent.className = "inactive";
+
 }
 
-runPlot(); //Load new map with default settings
 
-});
+//Glob var for the whole page :s
+function runDefaultPlot(){
+    plot = new Plot();
+    conf = new Conf();
+    runPlot();
+}
 
+runDefaultPlot(); //Load new map with default settings

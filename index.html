@@ -13,6 +13,7 @@
     <link href="/css/docs.css" rel="stylesheet">
     <link href="/css/prettify.css" rel="stylesheet">
 
+     <!--<script src='/js/closure-library/closure/goog/base.js'></script>-->
      <script data-main="js/main" src="js/lib/require-jquery.js"></script>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -123,7 +124,7 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li><a data-toggle="modal" href="#newplot">New Plot</a></li>
-                  <li><a href="#">Default Plot</a></li>
+                  <li><a href="#" onclick='runDefaultPlot()'>Default Plot</a></li>
                   <li class="divider"></li>
                   <li><a data-toggle="modal" href="#settings">Settings</a></li>
                 </ul>
@@ -139,10 +140,8 @@
 
     <div id='container'class="container">
 
-  
-
     <div id="map" style="z-index:1; position:relative; margin-top: 0px;" class='hide'>
-      <div class="alert alert-info" style="z-index:1; position:absolute; margin-top: +40px; width: 96.5%;">
+      <div class="alert alert-info" style="z-index:1000001; position:absolute; margin-top: +40px; width: 96.5%;">
         <button class="close" data-dismiss="alert" data-dismiss="alert">×</button>
         You want a custom plot? Go <a data-toggle="modal" href="#newplot">Plot > New Plot</a> :)
       </div> 
@@ -156,7 +155,7 @@
           <!-- TODO: Add tooltips to the loadings -->
 
           <p>Downloading Graph... <img id='dowloadImg'/></p>
-          <p>Prepocessing Graph... <img id='preprocessingImg'/></P>
+          <p>Preprocessing Graph... <img id='preprocessingImg'/></P>
           <p>Processing Graph... <img id='processingImg'/></p>
           <p>Rendering Map... <img id='renderingImg'/></p>
 
@@ -176,30 +175,30 @@
             <legend>Speed Settings</legend>
             <p class="help-block">Speeds are in meter per second.</p>
             <div class="control-group">
-              <label class="control-label" for="input01">Walk</label>
+              <label class="control-label">Walk</label>
               <div class="controls">
-                <input type="text" class="input-large" id="input01" placeholder="1.11">
+                <input type="text" class="input-large" id="walkSpeed">
               </div>
             </div>
 
             <div class="control-group">
-              <label class="control-label" for="input01">Car</label>
+              <label class="control-label">Car</label>
               <div class="controls">
-                <input type="text" class="input-large" id="input01" placeholder="6.94">
+                <input type="text" class="input-large" id="carSpeed">
               </div>
             </div>
 
             <div class="control-group">
-              <label class="control-label" for="input01">Bus</label>
+              <label class="control-label">Bus</label>
               <div class="controls">
-                <input type="text" class="input-large" id="input01" placeholder="5.56">
+                <input type="text" class="input-large" id="busSpeed">
               </div>
             </div>
 
             <div class="control-group">
-              <label class="control-label" for="input01">Subway</label>
+              <label class="control-label">Subway</label>
               <div class="controls">
-                <input type="text" class="input-large" id="input01" placeholder="13.89">
+                <input type="text" class="input-large" id="subwaySpeed">
               </div>
             </div>
           </fieldset>
@@ -209,58 +208,104 @@
           <fieldset>
             <legend>Map Settings</legend>
               <div class="control-group">
-                <label class="control-label" for="select01">Map Template</label>
+                <label class="control-label">Map Template</label>
                 <div class="controls">
-                  <select id="select01">
-                    <option>Template 1</option>
-                    <option>Template 2</option>
-                    <option>Template 3</option>
+                  <select id="provider">
+                    <option>Acetate-terrain</option>
+                    <option>Virtualearth</option>
+                    <option>Openstreetmap</option>
+                    <option>CloudMade</option>
+                    <option>Otile1.mqcdn.com</option>
+                    <option>Oatile1-naip</option>
+                    <option>Spaceclaw</option>
                   </select>
                 </div>
               </div>
               <div class="control-group">
-              <label class="control-label" for="input01">Lattitude at start</label>
+              <label class="control-label">Lattitude at start</label>
               <div class="controls">
-                <input type="text" class="input-large" id="input01" placeholder="31.217499">
+                <input type="text" class="input-large" id="lat">
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label" for="input01">Longitude at start</label>
+              <label class="control-label">Longitude at start</label>
               <div class="controls">
-                <input type="text" class="input-large" id="input01" placeholder="121.478577">
+                <input type="text" class="input-large" id="long">
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label" for="input01">Zoom at start</label>
+              <label class="control-label">Zoom at start</label>
               <div class="controls">
-                <input type="text" class="input-large" id="input01" placeholder="10">
+                <input type="text" class="input-large" id="zoom">
               </div>
             </div>
           </fieldset>
       </div>
-
       </div>
       <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal" >Close</a>
-        <a href="#" class="btn btn-primary">Save changes</a>
+        <button href="#" class="btn btn-primary" onclick='onSaveSettings()'>Save changes</button>
       </div>
     </div>
 
+
     <div id="newplot" class="modal hide fade">
-      <div>
-        <div class="modal-header">
-          <h3>New Plot</h3>
-        </div>
-        <div class="modal-body">
+      <div class="modal-header">
+        <h3>New Plot</h3>
+      </div>
+      <div class="modal-body">
+        <div class="form-horizontal">
+          <fieldset>
+            <p class="help-block">Select the parameters for the new plot:</p>
+            <label class="control-label" for="optionsCheckboxList">Allowed Means</label>
+            <div class="controls">
+              <label class="checkbox">
+                <input type="checkbox"  id='road' name="optionsCheckboxList1" value="road">
+                Walk
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" id='bus' name="optionsCheckboxList2" value='bus'>
+                Buses
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" id='subway' name="optionsCheckboxList3">
+                Subways
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" id='taxi' name="optionsCheckboxList3">
+                Taxi
+              </label>
+            </div>
 
-          <p>New Plot options</p>
+            <div class="control-group">
+              <label class="control-label">Time limit</label>
+              <div class="controls">
+                <input type="text" class="input-large" id="timelimit">
+                <p class="help-block">Amount of time allocated (in <strong>seconds</strong>) to reach an hospital.</p>
+              </div>
+            </div>
 
-        </div>
-        <div class="modal-footer">
-          <a href="#" class="btn" data-dismiss="modal" >Close</a>
-          <a data-toggle="modal" href="#settings" class="btn btn-primary">Advanced Settings</a>
-          <a data-toggle="modal" href="#computing" class="btn btn-primary">Run</a>
-        </div>
+             <div class="control-group">
+                <label class="control-label">Map Precision</label>
+                <div class="controls">
+                  <select id="nodecount">
+                    <option>150</option>
+                    <option>500</option>
+                    <option>1000</option>
+                    <option>1500</option>
+                    <option>2000</option>
+                    <option>2500</option>
+                  </select>
+                  <p class="help-block">Represents the number of vertices in the graph.</p>
+                </div>
+              </div>
+
+          </fieldset>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal" >Close</a>
+        <button href="#" class="btn btn-primary" onclick='onNewPlotRun()'>Run Plot</button>
       </div>
     </div>
 

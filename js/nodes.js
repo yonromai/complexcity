@@ -89,6 +89,10 @@ NodeLayer.prototype = {
     positioned: false,
     locations:  null,
 
+    isEmpty: function(){
+        return this.locations.length == 0;
+    },
+
     addNode: function(node){
         loc = new MM.Location(node.latitude,node.longitude);
         loc.nodeId = node.id;

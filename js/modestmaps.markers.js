@@ -20,9 +20,9 @@
  * map.setCenterZoom(marker.location, 13);
  *
  */
- var MarkerLayer = function(parent) {
+MarkerLayer = function(parent) {
     this.parent = parent || document.createElement('div');
-    this.parent.style.cssText = 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; margin: 0; padding: 0; z-index: 0';
+    this.parent.style.cssText = 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; margin: 0; padding: 0; z-index: 1000000';
     this.markers = [];
     this.resetPosition();
 };
@@ -180,8 +180,9 @@ MarkerLayer.prototype = {
                 pos.x -= this.position.x;
                 pox.y -= this.position.y;
             }
-            marker.style.left = ~~(pos.x + .5) + "px";
-            marker.style.top = ~~(pos.y + .5) + "px";
+            // FIXME: handle relative image size
+            marker.style.left = ~~(pos.x - 16 + 1) + "px";
+            marker.style.top = ~~(pos.y - 16 + 1) + "px";
         } else {
             // TODO: throw an error?
         }
@@ -230,6 +231,3 @@ if (!Array.prototype.indexOf) {
         return -1;
     }
 }
-
-//console.log('Markers Loaded');
-
