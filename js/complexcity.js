@@ -16,13 +16,15 @@
     }
 
     function runPlot(){
-	//Run graph calculus
+    //Set Original state
     $('#dowloadImg').removeAttr('src');
     $('#preprocessingImg').removeAttr('src');
     $('#processingImg').removeAttr('src');
-   $('#renderingImg').removeAttr('src');
+    $('#renderingImg').removeAttr('src');
+    $('.hospital').remove();
     hideMap();
 
+	//Run graph calculus
     $('#dowloadImg').attr('src',"/img/load.gif");
 
     $.getJSON(plot.graph, function(data) {
@@ -72,7 +74,7 @@ function onProcessed(){
    $('#processingImg').attr('src',"/img/icon-done.png");
    $('#renderingImg').attr('src',"/img/load.gif");
 
-   setTimeout(function(){plotMap()}, 100);
+   setTimeout(function(){plotMap()}, 500);
 }
 
 function onMapRendered(){
@@ -101,6 +103,7 @@ function plotMap() {
 	var locations = [];
     //Specify template provider
     showMap();
+    delete(map);
     map = new MM.Map("map", conf.mapProvider);
     map.setCenterZoom(new MM.Location(conf.startLatitude,conf.startLongitude), conf.startZoom);
 
@@ -114,11 +117,11 @@ function plotMap() {
     allNodes = new NodeLayer(false);
     map.addLayer(allNodes);
 
-    nodeSelection1 = new NodeLayer(false);
-    map.addLayer(nodeSelection1);
+    // nodeSelection1 = new NodeLayer(false);
+    // map.addLayer(nodeSelection1);
 
-    nodeSelection2 = new NodeLayer(false);
-    map.addLayer(nodeSelection2);
+    // nodeSelection2 = new NodeLayer(false);
+    // map.addLayer(nodeSelection2);
 
     markers = new MarkerLayer();
     map.addLayer(markers);

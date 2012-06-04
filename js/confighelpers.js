@@ -111,7 +111,8 @@ var jsonGraphMapper = (function(){
 // Plot contains the plot request of the user
 // NOTE: time unit is second and distance unit is meter
 var Plot = function(){
-  this.graph = jsonGraphMapper['500'];
+  this.nodecount = '500';
+  this.graph = jsonGraphMapper[this.nodecount];
   this.allowedMeans = {
     road: true,
     bus: true,
@@ -136,7 +137,10 @@ $('#newplot').on('show', function () {
   if(plot.allowedMeans.taxi)
     $('#taxi').attr("checked",checked);
   
-  $('#timelimit').attr("placeholder",plot.timelimit.toFixed(2) );
+  $('#timelimit').attr("placeholder",plot.timelimit.toFixed(2));
+
+  $('.nodecountOpt').removeAttr('selected');
+  $('#'+plot.nodecount+'Opt').attr("selected","selected");
 
 });
 
@@ -166,6 +170,7 @@ function onNewPlotRun(){
     plot.timelimit = timelimit;
   }
   if(nodecount){
+    plot.nodecount = nodecount;
     plot.graph = jsonGraphMapper[nodecount];
   }
 
