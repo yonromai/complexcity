@@ -8,13 +8,12 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
+    
+    <!-- Le styles -->
     <link href="/css/bootstrap.css" rel="stylesheet">
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
     <link href="/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/css/docs.css" rel="stylesheet">
+    <link href="/css/prettify.css" rel="stylesheet">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -22,7 +21,7 @@
     <![endif]-->
     </head>
 
-  <div class="navbar navbar-fixed-top">
+  <div class="navbar navbar-fixed-top"  >
       <div class="navbar-inner">
         <div class="container">
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -30,20 +29,28 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">Complexcity</a>
-          <div class="nav-collapse">
+          <a class="brand" href="#">Complexcity - Time Map (Alpha)</a>
+          <div class="nav nav-pills">
             <ul class="nav">
-              <li><a href="index.html">Map</a></li>
+              <li><a href="index.html" onclick='runDefaultPlot()'>Map</a></li>
+              <li><a href="#">About</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
 
-    <div class="container">
+    <div class="container hero-unit">
 
-      <h1>About Complexcity</h1>
+      <h2>About Complexcity</h2>
+      </fieldset>
       <p>Here goes the (future) description :)<br> Contact: romain.yon@gmail.com</p>
+      <!--
+      Yet another viz... what for?
+      How does it work?
+      REX/discussions
+      What's Next?
+      -->
 
     </div> <!-- /container -->
 

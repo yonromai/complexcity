@@ -221,7 +221,11 @@ function onMarkerOut(e) {
     nodeSelection2.parent.className = "inactive";
     nodeSelection2.removeAllNodes();
     allNodes.parent.className = "active";
-
+    //showing all hospitals
+    for (i in markers.markers){
+        var m = markers.markers[i];
+        m.className = "hospital";
+    }
 }
 
 function onMarkerOver(e) {
@@ -249,10 +253,16 @@ function onMarkerOver(e) {
                 node.radius = radius;
                 selection.addNode(node);
             }
+            // Hide other hospitals
+            for (i in markers.markers){
+                var m = markers.markers[i];
+                if(m.id != marker.id){
+                    m.className = "hide";
+                } 
+            }
         }
     }  
 }
-
 
 //Glob var for the whole page :s
 function runDefaultPlot(){
