@@ -48,7 +48,7 @@ post = function(msg, data){
   });
 }
 
-log = function(str){
+log = function(str){ // useful for debugging: Workers can't access console.log... :\
   post('console','Worker - console: ' + str);
 }
 
@@ -58,13 +58,16 @@ function processEdges(graph, plot, speed){
       for(k in graph.adjacency[i][j]){
         if (k != 'id') {
           // Edge between the nodes i and j, using the k-th transport mean
-          edge = graph.adjacency[i][j][k]; 
+          var edge = graph.adjacency[i][j][k]; 
           if(plot.allowedMeans[edge.type]){
             if(edge.type === 'road')
               if(plot.allowedMeans['taxi']){
                 edge.type = 'car';
-              } else {
+              } else if(plot.allowedMeans['walk']){
                 edge.type = 'walk';
+              } else {
+                delete graph.adjacency[i][j][k];
+                continue;
               }
             edge.timeCost = edge.weight / speed[edge.type];
           } else {
@@ -77,7 +80,7 @@ function processEdges(graph, plot, speed){
   return graph;
 }
 
-// Transform the graph from its json format (cf: http://1.usa.gov/K2NbM4)
+// Transform the graph from its json format (cf. http://1.usa.gov/K2NbM4)
 // to an adjacency list (=> array of dict: each dict represents the 
 // adjacency of a particular vertex: Each dict contains each adjacent node as
 // keys and the (min) edge weight as values.
@@ -110,7 +113,7 @@ function adjacencyList(graph){
           }
         }
       }
-      if (minEdge && v && v != i){
+      if (minEdge && v && v != i){ //we make sure not to add self edges
         //add edge
         adjacencyList[i][v] = minEdge;
       }
@@ -149,7 +152,7 @@ function dijkstra(graph, source){
   return dist;
 }
 
-function getHospitals(graph){ // To suppr!
+function getHospitals(graph){ 
   var hospitals = {};
   for (i in graph.nodes) {
     var node = graph.nodes[i];

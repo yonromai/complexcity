@@ -15,7 +15,7 @@ var Spotlight = function(canvas, fillStyle) {
 
 Spotlight.prototype = {
     fillStyle: "rgba(0,0,0,.6)",
-    radius: function(){ return 40},
+    //radius: function(){ return 40},
 
     // clearing resets the canvas and fills it with the fillStyle
     clear: function() {

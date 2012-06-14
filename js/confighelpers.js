@@ -40,8 +40,7 @@ var Conf = function(){
     bus: 20 * 10/36.,
     subway: 50 * 10/36.
   };
-  //this.mapProvider = new MM.TemplatedLayer("http://ecn.t{S}.tiles.virtualearth.net/tiles/r{Q}?g=689&mkt=en-us&lbl=l0&stl=m", [0,1,2,3,4,5,6,7]);
-  this.mapProvider = providerMapper['Acetate-terrain'];
+  this.mapProvider = 'Acetate-terrain';//providerMapper['Acetate-terrain'];
   this.startLatitude = 31.217499;
   this.startLongitude = 121.478577;
   this.startZoom = 9;
@@ -67,7 +66,7 @@ function onSaveSettings(){
   var long = parseFloat($('#long')[0].value);
   var zoom = parseInt($('#zoom')[0].value, 10);
   var provider = $('#provider')[0].value;
-
+  var conf = getConf();
   if(walkSpeed){
     conf.speed.walk = walkSpeed;
   }
@@ -91,9 +90,9 @@ function onSaveSettings(){
     conf.startZoom = zoom;
   }
   if(provider){
-    conf.mapProvider = providerMapper[provider];
+    conf.mapProvider = provider;
   }
-
+  setConf(conf);
   $('#settings').modal('hide');
 }
 
@@ -114,7 +113,7 @@ var Plot = function(){
   this.nodecount = '500';
   this.graph = jsonGraphMapper[this.nodecount];
   this.allowedMeans = {
-    road: true,
+    walk: true,
     bus: true,
     subway: true,
     taxi: false
@@ -125,8 +124,8 @@ var Plot = function(){
 
 $('#newplot').on('show', function () {
   var checked = 'yes';
-  if(plot.allowedMeans.road)
-    $('#road').attr("checked",checked);
+  if(plot.allowedMeans.walk)
+    $('#walk').attr("checked",checked);
 
   if(plot.allowedMeans.bus)
     $('#bus').attr("checked",checked);
@@ -145,7 +144,7 @@ $('#newplot').on('show', function () {
 });
 
 function onNewPlotRun(){
-  var road = $('#road')[0].checked;
+  var walk = $('#walk')[0].checked;
   var bus = $('#bus')[0].checked;
   var subway = $('#subway')[0].checked;
   var taxi = $('#taxi')[0].checked;
@@ -154,18 +153,11 @@ function onNewPlotRun(){
 
   var nodecount = $('#nodecount')[0].value;
 
-  if(road){
-    plot.allowedMeans.road = road;
-  }
-  if(bus){
-    plot.allowedMeans.bus = bus;
-  }
-  if(subway){
-    plot.allowedMeans.subway = subway;
-  }
-  if(taxi){
-    plot.allowedMeans.taxi = taxi;
-  }
+  plot.allowedMeans.walk = walk;
+  plot.allowedMeans.bus = bus;
+  plot.allowedMeans.subway = subway;
+  plot.allowedMeans.taxi = taxi;
+
   if(timelimit){
     plot.timelimit = timelimit;
   }
@@ -178,10 +170,18 @@ function onNewPlotRun(){
   runPlot();
 }
 
+var getConf = function(){
+  conf = JSON.parse(sessionStorage.getItem('Conf'));
+  if(!conf){
+    conf = new Conf();
+    setConf(conf);
+  } else {
+    console.log('Retreived Conf');
+  }
+  //conf.mapProvider = providerMapper[conf.mapProvider];
+  return conf;
+}
 
-
-
-
-
-
-
+var setConf = function(conf){
+  sessionStorage.setItem('Conf', JSON.stringify(conf));
+}

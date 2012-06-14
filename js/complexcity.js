@@ -1,22 +1,27 @@
+// Contains the main display functions... nice mess :)
 
-
-    var 
-    worker = new Worker('/js/worker.js');
+var worker = new Worker('/js/worker.js');
     
-    function showMap(){
-        $('#container').addClass('mapmode');
-        $("#map").removeClass("hide");
-        $("#graph_loading").addClass("hide");
-    }
+if(!sessionStorage.getItem('popup')){ //Display the popup only once in a session
+    sessionStorage.setItem('popup',true);
+    $('#popup').removeClass('hide');
+}
 
-    function hideMap(){
-        $("#map").addClass("hide");
-        $('#container').removeClass('mapmode');
-        $("#graph_loading").removeClass("hide");
-    }
+function showMap(){
+    $('#container').addClass('mapmode');
+    $("#map").removeClass("hide");
+    $("#graph_loading").addClass("hide");
+}
 
-    function runPlot(){
+function hideMap(){
+    $("#map").addClass("hide");
+    $('#container').removeClass('mapmode');
+    $("#graph_loading").removeClass("hide");
+}
+
+function runPlot(){
     //Set Original state
+    conf = getConf();
     $('#dowloadImg').removeAttr('src');
     $('#preprocessingImg').removeAttr('src');
     $('#processingImg').removeAttr('src');
@@ -24,9 +29,8 @@
     $('.hospital').remove();
     hideMap();
 
-	//Run graph calculus
+    //Run graph calculus
     $('#dowloadImg').attr('src',"/img/load.gif");
-
     $.getJSON(plot.graph, function(data) {
         onGraphDownloaded(data);
     });
@@ -53,7 +57,7 @@ worker.onmessage = function(e){
 function onGraphDownloaded(graph) {
     $('#dowloadImg').attr('src',"/img/icon-done.png");
     $('#preprocessingImg').attr('src',"/img/load.gif");
-
+    TheGraph = graph; //global var for quick testing: to delete!
     worker.postMessage({
         message: 'preprocess',
         data: [graph, plot, conf.speed]
@@ -63,7 +67,6 @@ function onGraphDownloaded(graph) {
 function onPreprocessed(graph){
     $('#preprocessingImg').attr('src',"/img/icon-done.png");
     $('#processingImg').attr('src',"/img/load.gif");
-
     worker.postMessage({
         message: 'process',
         data: [graph, plot.timelimit]
@@ -73,7 +76,6 @@ function onPreprocessed(graph){
 function onProcessed(){
    $('#processingImg').attr('src',"/img/icon-done.png");
    $('#renderingImg').attr('src',"/img/load.gif");
-
    setTimeout(function(){plotMap()}, 500);
 }
 
@@ -103,7 +105,7 @@ function plotMap() {
 	var locations = [];
     //Specify template provider
     showMap();
-    map = new MM.Map("map", conf.mapProvider);
+    map = new MM.Map("map", providerMapper[conf.mapProvider]);
     map.setCenterZoom(new MM.Location(conf.startLatitude,conf.startLongitude), conf.startZoom);
 
     map.meter2pixel = function(meters){
@@ -135,8 +137,8 @@ function plotMap() {
                maxTime = servedBy[i][hosp] ;
         }
         if(maxTime > 0){
-            var speed =(plot.allowedMeans.taxi ? conf.speed.car : conf.speed.walk);
-            var radius = conf.speed.walk * maxTime; 
+            var speed = (plot.allowedMeans.taxi ? conf.speed.car : conf.speed.walk);
+            var radius = speed * maxTime; 
             node.radius = radius;
             allNodes.addNode(node);
         } else {
@@ -247,9 +249,10 @@ function onMarkerOver(e) {
             allNodes.parent.className = "inactive";
             selection.parent.className = "active";
 
+            var speed = (plot.allowedMeans.taxi ? conf.speed.car : conf.speed.walk);
             for (v in hospitals[marker.id]){
                 node = nodes[v];
-                var radius = conf.speed.walk * hospitals[marker.id][v]; 
+                var radius = speed * hospitals[marker.id][v]; 
                 node.radius = radius;
                 selection.addNode(node);
             }
@@ -264,12 +267,9 @@ function onMarkerOver(e) {
     }  
 }
 
-//Glob var for the whole page :s
 function runDefaultPlot(){
     plot = new Plot();
-    //conf = new Conf(); //FIXME: Does default plot mean default config?.. not sure
     runPlot();
 }
 
-conf = new Conf();
 runDefaultPlot(); //Load new map with default settings

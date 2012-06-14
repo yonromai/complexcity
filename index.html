@@ -141,9 +141,9 @@
     <div id='container'class="container">
 
     <div id="map" style="z-index:1; position:relative; margin-top: 0px;" class='hide'>
-      <div class="alert alert-info" style="z-index:1000001; position:absolute; margin-top: +40px; width: 96.5%;">
+      <div id="popup" class="alert alert-info hide" style="z-index:1000001; position:absolute; margin-top: +40px; width: 96.5%;">
         <button class="close" data-dismiss="alert" data-dismiss="alert">×</button>
-        You want a custom plot? Go <a data-toggle="modal" href="#newplot">Plot > New Plot</a> :)
+        Welcome! Hover any hospital (& wait a few seconds) to reveil the areas served by this hospital! You want a custom plot? Go <a data-toggle="modal" href="#newplot">Plot > New Plot</a> :)
       </div> 
     </div>
 
@@ -256,24 +256,24 @@
       <div class="modal-body">
         <div class="form-horizontal">
           <fieldset>
-            <p class="help-block">Select the parameters for the new plot:</p>
+            <p class="help-block">Set parameters for the new plot:</p>
             <label class="control-label" for="optionsCheckboxList">Allowed Means</label>
             <div class="controls">
               <label class="checkbox">
-                <input type="checkbox"  id='road' name="optionsCheckboxList1" value="road">
+                <input type="checkbox"  id='walk'>
                 Walk
               </label>
               <label class="checkbox">
-                <input type="checkbox" id='bus' name="optionsCheckboxList2" value='bus'>
+                <input type="checkbox" id='bus'>
                 Buses
               </label>
               <label class="checkbox">
-                <input type="checkbox" id='subway' name="optionsCheckboxList3">
+                <input type="checkbox" id='subway'>
                 Subways
               </label>
               <label class="checkbox">
-                <input type="checkbox" id='taxi' name="optionsCheckboxList3">
-                Taxi
+                <input type="checkbox" id='taxi'>
+                Taxis
               </label>
             </div>
 
