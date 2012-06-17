@@ -42,15 +42,161 @@
 
     <div class="container hero-unit">
 
-      <h2>About Complexcity</h2>
-      </fieldset>
-      <p>Here goes the (future) description :)<br> Contact: romain.yon@gmail.com</p>
-      <!--
-      Yet another viz... what for?
-      How does it work?
-      REX/discussions
-      What's Next?
-      -->
+
+
+            <!-- Masthead
+      ================================================== -->
+      <header class="jumbotron subhead" id="overview">
+
+        <h1>About Complexcity</h1>
+            
+          <section id="javascript">
+            <div class="page-header">     
+              <p>Complexcity is an interactive visualization project to study hospital coverage in Shanghai (China). </p>
+
+              <p>Complexcity considers many modes of transport (Subways, Buses, Taxies and … Feet) to determine a good approximation of which areas are served by any hospital, given a certain amount of time.</p>
+
+              <p>The user can specify at any time which modes of transport are allowed and which amount of time is available to reach any hospital. The map is rendered dynamically given these criteria.</p>
+
+              <hr>
+            </div>
+
+        <div class="subnav">
+          <ul class="nav nav-pills">
+            <li class="dropdown">
+            <li><a href="#whatfor">What for?</a></li>
+            <li><a href="#bigpicture">The Big Picture</a></li>
+            <li><a href="#dataorigin">Data Origin</a></li>
+            <li><a href="#reduction">Graph Reduction</a></li>
+            <li><a href="#routeprocessing">Route Processing</a></li>
+            <li><a href="#applayout">App Layout</a></li>
+            <li><a href="#rendering">Map Rendering</a></li>
+            <li><a href="#next">What's Next?</a></li>
+          </ul>
+        </div>
+        </section>
+      </header>
+
+
+
+
+
+<section id="whatfor">
+  <div class="page-header">
+    <h2>What for?</h2>
+    <hr>
+  </div>
+<p>This project was developed as a school project by Romain Yon. The subject was proposed by Fabien Pfaender as part of his researches: </p>
+<p>[Ask Fabien : Origin of the project, what will you do with that.]</p>
+</section>
+
+<section id="bigpicture">
+  <div class="page-header">
+    <h2>The Big Picture</h2>
+    <hr>
+  </div>
+
+<p>This project counts two main sections: a static part and a dynamic one.</p>
+
+<p>The static part aims at providing a graph to represent the transportation network in Shanghai. This graph is reduced (to ease dynamic processing) and delivered as a JSON adjacency graph by a server (the web role runs on <a href="http://nodejs.org/">node.js</a>, hosted on <a href="http://www.heroku.com/">heroku</a>).</p>
+
+<p>The dynamic part contains the hospital coverage processing (using a <a href="http://en.wikipedia.org/wiki/Dijkstra's_algorithm">Dijkstra algorithm</a>) and the map rendering, all done client side (in the web browser).</p>
+
+<p>Here is a snapshot of the different steps in each section:</p>
+
+<p>Static Part (in Python):</p>
+ <img src='/img/staticSeq.png'></img>
+ <br/>
+<p>Dynamic Part (in JavaScript):</p>
+<img src='/img/dynamicSeq.png'></img>
+ </section>
+
+
+<section id="dataorigin">
+  <div class="page-header">
+    <h2>Data Origin</h2>
+    <hr>
+  </div>
+
+<p>[Ask Fabien: From Osm ?]</p>
+
+<p>Once we have a graph per modes of transport, we need to gather them to get the global transportation network.
+This way, we come up with a fairly big graph (more than 70k vertices and 400k edges): Each vertex represents a geographic location (having distinct latitude and longitude) and each edge represents a type of transport to go from one location to another (having a distance and a type of transport attribute).</p>
+</section>
+
+
+<section id="reduction">
+  <div class="page-header">
+    <h2>Graph Reduction</h2>
+    <hr>
+  </div>
+
+<p>As specified at the beginning, the user can select at any time which types of transport are allowed and which amount of time is available (plus some other settings). Thus, some computation on the graph needs to be done dynamically.</p>
+
+<p>As the aggregated graph is fairly big, it is a good idea to reduce it in order to ease dynamic calculus.</p>
+
+<p>For this purpose, the <a href="http://en.wikipedia.org/wiki/K-means_clustering">k-means algorithm</a> was used (repeatedly) on the network graph. Let’s notice that the coordinates were converted to a <a href="http://en.wikipedia.org/wiki/Mercator_projection">Mercator system</a> in order to respect Euclidian distance.</p>
+
+<p>This way, several graphs where computed so that the user can choose the number of nodes in the graph, depending on the processing power of his/her machine.</p>
+</section>
+
+
+<section id="routeprocessing">
+  <div class="page-header">
+    <h2>Route Processing</h2>
+    <hr>
+  </div>
+
+<p>The route processing is done entirely client side, in JavaScript.</p>
+
+<p>A preprocessing step is needed to filter the edges, depending on which types of transport are allowed by the user. Also, the distances are replaced by time cost values (speeds can be configured via the settings menu). </p>
+
+<p>The shortest routes are processed using a <a href="http://en.wikipedia.org/wiki/Dijkstra's_algorithm">Dijkstra Algorithm</a> (based on the time cost weight on the edges). This algorithm is implemented using a <a href="http://en.wikipedia.org/wiki/Min-priority_queue">min-priority queue</a> backed by a <a href="http://en.wikipedia.org/wiki/Fibonacci_heap">Fibonacci heap</a> (provided by the <a href="http://closure-library.googlecode.com/svn/docs/namespace_goog_structs.html">Google closure</a> framework) so that the overall complexity is O(|E| + |V| log |V|). Let’s notice that the complexity of this algorithm is a problem since the map rendering is by far the slowest part of the process.</p>
+
+<p>This calculus is made by a <a href="https://developer.mozilla.org/En/Using_web_workers">web worker</a> (kind of multi-threading facilities offered by html 5). This way, we ensure that the main rendering thread won’t freeze during the calculus.</p>
+</section>
+
+
+<section id="applayout">
+  <div class="page-header">
+    <h2>App Layout</h2>
+    <hr>
+  </div>
+
+
+<p>The global layout relies mainly on <a href="http://twitter.github.com/bootstrap/">twitter’s bootstrap</a>, great to have a nice UI very quickly. Some bootstrap plugins were very useful, such as the <a href="http://twitter.github.com/bootstrap/javascript.html#modals">modal module</a>.</p>
+</section>
+
+
+<section id="rendering">
+  <div class="page-header">
+    <h2>Map Rendering</h2>
+    <hr>
+  </div>
+
+
+<p>At the beginning of the project, I was asked to use <a href="http://processing.org/">processing</a> for this project. We figured out later than a web application was a better fit for this project (mainly because this project will be used for communication).</p>
+
+<p>The map rendering is done using the <a href="http://modestmaps.com/">Modestmaps</a> JavaScript library. Html 5 canvas are used to plot the circles on the map.</p>
+</section>
+
+
+<section id="next">
+  <div class="page-header">
+    <h2>What's Next?</h2>
+    <hr>
+  </div>
+
+
+<p>Many improvements can be brought to this project. Here are some ideas:</p>
+<ul>
+  <li><p>Use a <a href="http://en.wikipedia.org/wiki/Voronoi_diagram">Voronoi Tessellation</a> to plot areas on the map instead of circles (the <a href="http://d3js.org/">d3.js</a> lib can certainly <a href="http://mbostock.github.com/d3/ex/voronoi.html">help</a> to implement such feature).</p></li>
+  <li><p>Improve the layout system to make it more responsive.</p></li>
+  <li><p>Use a better algorithm than K-means for our purpose (cf. researches on the Additively Weighted Voronoi Diagram (AWVD) problem)</p></li>
+</ul>
+<p>If you want to make such improvements, feel free to fork the <a href="https://github.com/yonromai/complexcity">Github repository</a> :) </p>
+</section>
+      
 
     </div> <!-- /container -->
 
@@ -61,5 +207,6 @@
     <script src="/js/lib/bootstrap-transition.js"></script>
     <script src="/js/lib/bootstrap-modal.js"></script>
     <script src="/js/lib/bootstrap-dropdown.js"></script>
+    <script src='/js/lib/helper-bootstrap.js'></script>
   </body>
 </html>
