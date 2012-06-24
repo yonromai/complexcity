@@ -87,7 +87,7 @@
     <hr>
   </div>
 <p>This project was developed as a school project by Romain Yon. The subject was proposed by Fabien Pfaender as part of his researches: </p>
-<p>[Ask Fabien : Origin of the project, what will you do with that.]</p>
+<p>They want to study how Shanghai is currently served by General Hospitals depending on which types of transport are allowed. These researches may lead to the study of an ideal posibion for new kinds of hospitals: Small sized, proxity, specialized hospitals.</p>
 </section>
 
 <section id="bigpicture">
@@ -118,7 +118,13 @@
     <hr>
   </div>
 
-<p>[Ask Fabien: From Osm ?]</p>
+<p>Most of data used in this project come from <a href="http://www.openstreetmap.org/">Open stree maps</a>. Three network graphs where extracted from osm:</p>
+
+<ul>
+  <li><p>Road intersections</p></li>
+  <li><p>Bus Lines</p></li>
+  <li><p>Road intersections</p></li>
+</ul>
 
 <p>Once we have a graph per modes of transport, we need to gather them to get the global transportation network.
 This way, we come up with a fairly big graph (more than 70k vertices and 400k edges): Each vertex represents a geographic location (having distinct latitude and longitude) and each edge represents a type of transport to go from one location to another (having a distance and a type of transport attribute).</p>
